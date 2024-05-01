@@ -35,6 +35,8 @@
     <script>
         // Function to handle drag start
         function handleDragStart(e) {
+            e.preventDefault();
+            e.stopPropagation();
             e.dataTransfer.setData("text", e.target.id);
         }
     
@@ -62,7 +64,7 @@
             e.target.appendChild(draggableElement);
         }
     
-        // Adding event listeners for touch events
+        // Adding event listeners for both mouse and touch events
         document.querySelectorAll('.draggable').forEach(item => {
             item.addEventListener('dragstart', handleDragStart);
             item.addEventListener('touchstart', handleDragStart);
@@ -72,10 +74,13 @@
             zone.addEventListener('dragover', handleDragOver);
             zone.addEventListener('dragleave', handleDragLeave);
             zone.addEventListener('drop', handleDrop);
+    
+            // Additional touch events for touch-enabled devices
             zone.addEventListener('touchmove', handleDragOver);
             zone.addEventListener('touchend', handleDrop);
         });
     </script>
+    
     
 
 </body>
