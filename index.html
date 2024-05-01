@@ -33,54 +33,53 @@
     </div>
 
     <script>
-        // Function to handle drag start
-        function handleDragStart(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.dataTransfer.setData("text", e.target.id);
-        }
+        document.querySelectorAll('.draggable').forEach(item=>{
+            item.addEventListener('dragstart',e=>{
+                e.dataTransfer.setData("text",e.target.id);
+            });
     
-        // Function to handle drag over
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.target.classList.add('bg-gray-400');
-        }
+            // Touch events for mobile devices
+            item.addEventListener('touchstart', e => {
+                const touch = e.touches[0];
+                const offsetX = touch.clientX - touch.target.getBoundingClientRect().left;
+                const offsetY = touch.clientY - touch.target.getBoundingClientRect().top;
+                e.target.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            });
     
-        // Function to handle drag leave
-        function handleDragLeave(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.target.classList.remove('bg-gray-400');
-        }
+            item.addEventListener('touchmove', e => {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const offsetX = touch.clientX - touch.target.getBoundingClientRect().left;
+                const offsetY = touch.clientY - touch.target.getBoundingClientRect().top;
+                e.target.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            });
     
-        // Function to handle drop
-        function handleDrop(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.target.classList.remove('bg-gray-400');
-            const id = e.dataTransfer.getData("text");
-            const draggableElement = document.getElementById(id);
-            e.target.appendChild(draggableElement);
-        }
-    
-        // Adding event listeners for both mouse and touch events
-        document.querySelectorAll('.draggable').forEach(item => {
-            item.addEventListener('dragstart', handleDragStart);
-            item.addEventListener('touchstart', handleDragStart);
+            item.addEventListener('touchend', e => {
+                e.preventDefault();
+                e.target.style.transform = '';
+            });
         });
     
-        document.querySelectorAll('.drop-zone').forEach(zone => {
-            zone.addEventListener('dragover', handleDragOver);
-            zone.addEventListener('dragleave', handleDragLeave);
-            zone.addEventListener('drop', handleDrop);
+        document.querySelectorAll('.drop-zone').forEach(zone=>{
+            zone.addEventListener('dragover',e=>{
+                e.preventDefault();
+                zone.classList.add('bg-gray-400');
+            });
     
-            // Additional touch events for touch-enabled devices
-            zone.addEventListener('touchmove', handleDragOver);
-            zone.addEventListener('touchend', handleDrop);
+            zone.addEventListener('dragleave',e=>{
+                e.preventDefault();
+                zone.classList.remove('bg-gray-400');
+            });
+    
+            zone.addEventListener('drop',e=>{
+                e.preventDefault();
+                zone.classList.remove('bg-gray-400');
+                const id = e.dataTransfer.getData("text");
+                const draggableElement = document.getElementById(id);
+                zone.appendChild(draggableElement);
+            });
         });
     </script>
-    
     
 
 </body>
