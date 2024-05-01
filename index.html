@@ -33,30 +33,50 @@
     </div>
 
     <script>
-        document.querySelectorAll('.draggable').forEach(item=>{
-            item.addEventListener('dragstart',e=>{
-                e.dataTransfer.setData("text",e.target.id);
-            })
-        })
-
-        document.querySelectorAll('.drop-zone').forEach(zone=>{
-            zone.addEventListener('dragover',e=>{
-                e.preventDefault();
-                zone.classList.add('bg-gray-400')
-            })
-            zone.addEventListener('dragleave',e=>{
-                e.preventDefault();
-                zone.classList.remove('bg-gray-400')
-            })
-            zone.addEventListener('drop',e=>{
-                e.preventDefault()
-                zone.classList.remove('bg-gray-400')
-                const id = e.dataTransfer.getData("text")
-                const draggableElement = document.getElementById(id)
-                zone.appendChild(draggableElement)
-            })
-        })
+        // Function to handle drag start
+        function handleDragStart(e) {
+            e.dataTransfer.setData("text", e.target.id);
+        }
+    
+        // Function to handle drag over
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.target.classList.add('bg-gray-400');
+        }
+    
+        // Function to handle drag leave
+        function handleDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.target.classList.remove('bg-gray-400');
+        }
+    
+        // Function to handle drop
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.target.classList.remove('bg-gray-400');
+            const id = e.dataTransfer.getData("text");
+            const draggableElement = document.getElementById(id);
+            e.target.appendChild(draggableElement);
+        }
+    
+        // Adding event listeners for touch events
+        document.querySelectorAll('.draggable').forEach(item => {
+            item.addEventListener('dragstart', handleDragStart);
+            item.addEventListener('touchstart', handleDragStart);
+        });
+    
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', handleDragOver);
+            zone.addEventListener('dragleave', handleDragLeave);
+            zone.addEventListener('drop', handleDrop);
+            zone.addEventListener('touchmove', handleDragOver);
+            zone.addEventListener('touchend', handleDrop);
+        });
     </script>
+    
 
 </body>
 </html>
