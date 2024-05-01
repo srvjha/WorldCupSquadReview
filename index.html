@@ -33,53 +33,45 @@
     </div>
 
     <script>
-        document.querySelectorAll('.draggable').forEach(item=>{
-            item.addEventListener('dragstart',e=>{
-                e.dataTransfer.setData("text",e.target.id);
-            });
+        // Function to handle both touch and mouse events for starting the drag
+        function startDrag(e) {
+            e.dataTransfer.setData("text", e.target.id);
+        }
     
-            // Touch events for mobile devices
-            item.addEventListener('touchstart', e => {
-                const touch = e.touches[0];
-                const offsetX = touch.clientX - touch.target.getBoundingClientRect().left;
-                const offsetY = touch.clientY - touch.target.getBoundingClientRect().top;
-                e.target.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-            });
-    
-            item.addEventListener('touchmove', e => {
-                e.preventDefault();
-                const touch = e.touches[0];
-                const offsetX = touch.clientX - touch.target.getBoundingClientRect().left;
-                const offsetY = touch.clientY - touch.target.getBoundingClientRect().top;
-                e.target.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-            });
-    
-            item.addEventListener('touchend', e => {
-                e.preventDefault();
-                e.target.style.transform = '';
-            });
+        document.querySelectorAll('.draggable').forEach(item => {
+            item.addEventListener('dragstart', startDrag);
+            item.addEventListener('touchstart', startDrag); // Add touchstart event for mobile devices
         });
     
-        document.querySelectorAll('.drop-zone').forEach(zone=>{
-            zone.addEventListener('dragover',e=>{
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', e => {
                 e.preventDefault();
                 zone.classList.add('bg-gray-400');
             });
     
-            zone.addEventListener('dragleave',e=>{
+            zone.addEventListener('dragleave', e => {
                 e.preventDefault();
                 zone.classList.remove('bg-gray-400');
             });
     
-            zone.addEventListener('drop',e=>{
+            zone.addEventListener('drop', e => {
                 e.preventDefault();
                 zone.classList.remove('bg-gray-400');
                 const id = e.dataTransfer.getData("text");
                 const draggableElement = document.getElementById(id);
                 zone.appendChild(draggableElement);
             });
+    
+            // Add touch event listeners for mobile devices
+            zone.addEventListener('touchenter', e => {
+                e.preventDefault();
+                const id = e.target.id; // Get the ID of the element being touched
+                const draggableElement = document.getElementById(id);
+                zone.appendChild(draggableElement);
+            });
         });
     </script>
+    
     
 
 </body>
